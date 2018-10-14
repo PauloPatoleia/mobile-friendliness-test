@@ -21,5 +21,8 @@
   "bugs": {
     "url": "https://github.com/FixTheInternet/mobile-friendliness-test/issues"
   },
-  "homepage": "https://github.com/FixTheInternet/mobile-friendliness-test#readme"
+  "homepage": "https://github.com/FixTheInternet/mobile-friendliness-test#readme",
+  "dependencies": {
+    "axios": "^0.18.0"
+  }
 }
