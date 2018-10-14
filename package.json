@@ -1,0 +1,25 @@
+{
+  "name": "mobile-friendliness-test",
+  "version": "1.0.0",
+  "description": "Google API mobile friendliness test for Node.js",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FixTheInternet/mobile-friendliness-test.git"
+  },
+  "keywords": [
+    "mobile-friendly"
+  ],
+  "author": "Valentino Patoleia",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/FixTheInternet/mobile-friendliness-test/issues"
+  },
+  "homepage": "https://github.com/FixTheInternet/mobile-friendliness-test#readme"
+}
