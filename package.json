@@ -23,6 +23,8 @@
   },
   "homepage": "https://github.com/FixTheInternet/mobile-friendliness-test#readme",
   "dependencies": {
-    "axios": "^0.18.0"
+    "axios": "^0.18.0",
+    "cheerio": "~0.13.1",
+    "request": "~2.33.0"
   }
 }
