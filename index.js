@@ -20,19 +20,21 @@ function MobileFriendlinessTest(urls, options) {
  */
 
 function req(url, apiKey) {
+
     return new Promise((resolve, reject) => {
       axios.post(`https://searchconsole.googleapis.com/v1/urlTestingTools/mobileFriendlyTest:run?key=${apiKey}`, {
                    url: url
                   }).then(
+
                       response => {
-                      // ANALISAR BEM A RESPOSTA E VER A ESTRUTUTA DA MESMA
+                      if(response.data.testStatus.status === "PAGE_UNREACHABLE") {
+                        return resolve(response.data.testStatus.status)
+                      }  
                       resolve(response.data.mobileFriendliness);
                        },
-                       error => {
-                           // ANALISAR BEM O ERRO E VER A ESTRUTURA DO MESMO
-                          console.log(error)
-                          //o que é isto? reject error
-                          reject(error);
+
+                       err => {
+                          reject(err.response);
                    }
                 );
             });
@@ -53,11 +55,12 @@ class mft {
     constructor( urls = [], options = {} ) {
         this.urls = urls
         this.apiKey = options.apiKey || process.env.API_KEY
+        this.timeout = options.timeout || 10000
     }
 
     test() {
         console.log('testing')
-        req(this.urls, this.apiKey).then(res => {
+        batchRequest(this.urls, this.timeout, this.apiKey).then(res => {
             console.log(res)
         }).catch(err => {
             console.log(err);
@@ -70,51 +73,55 @@ class mft {
     }
 }
 
+/**
+ * batchRequest
+ * Calls req function for each link and sets a timeout
+ * @param {string} url
+ * @param {number} timeout
+ * @return {array} of objects
+ */
 
-
-function batchRequest(urls, timeout // log) {
+function batchRequest(urls, timeout, apiKey) {
     
     return new Promise((resolve, reject) => {
       
     // OPTIONAL LOG if(this.options.log)
-      console.log(calculateOperationTime(urls.length, timeout/1000))
-      // RESULTADOS COM SUCESSO OU ERROS
+      // console.log(calculateOperationTime(urls.length, timeout/1000))
+
       let responses = [];
-      
+      let time = timeout
       for (let i = 0; i < urls.length; i++) {
-          
+
         setTimeout(() => {
+            console.log(time);
             
-          req(urls[i]).then(
+          req(urls[i], apiKey).then(
 
             response => {
-              // VER COMO VAMOS ESTRUTURAR A RESPOSTA
+
               responses.push({url: urls[i], result: response});
-                // LOG OPCIONAL? if(this.options.log)
-              console.log(response)
-              // resolve only once all api calls have been successful
+                tries++
+              // resolve only once all requests have been made
               if (urls.length === responses.length) {
                   resolve(responses);
               }
             },
             
             error => {
-               // RESOLVER DEPOIS DE VER A ESTRUTURA DO ERRO QUE VEM DO OUTRO? SAO O MESMO ERRO? NÃO SEI :/
-               // VER A DIFERENÇA ENTRE O ERRO DO REQ E O ERRO DE CHAMAR REQ?
-
-               // OPÇÃO DE LOGAR O ERRO
-               console.log(error)
-
-               // DEVO GUARDAR O ERRO NA ARRAY DOS RESULTADOS? E SE ELES QUISEREM FAZER UM LOOP NELA? Object vs Array
-               responses.push({url: urls[i], result: 'Test failed'});
+                console.log(error);
+                
+               if(error.status === 429) {
+                    console.log('Too many requests, retrying...')
+               } else {
+                    responses.push({url: urls[i], result: 'Test failed'});
+               }
+               
                if (urls.length === responses.length) {
                   resolve(responses);
                }
-            } // error
-
+            }
           );
-          // ver como estruturar os timeouts
-        }, timeout * (i + 1));
+        }, (time * (i + 1)));
       }
     });
   }
