@@ -2,9 +2,6 @@
 var axios = require('axios')
 
 
-// TENTAR PERCEBER COMO FUNCIONAM AS PROMESSAS E OS .THEN .THEN .THEN
-
-
 // Calls the object contructor 'mft' so that there is no need to use the keyword 'new'
 function MobileFriendlinessTest(urls, options) {
     return new mft(urls, options)
@@ -29,7 +26,7 @@ function req(url, apiKey) {
                       response => {
                       if(response.data.testStatus.status === "PAGE_UNREACHABLE") {
                         return resolve(response.data.testStatus.status)
-                      }  
+                      }
                       resolve(response.data.mobileFriendliness);
                        },
 
@@ -55,12 +52,13 @@ class mft {
     constructor( urls = [], options = {} ) {
         this.urls = urls
         this.apiKey = options.apiKey || process.env.API_KEY
-        this.timeout = options.timeout || 10000
+        this.timeout = options.timeout || 15000
+        this.log = options.log || null
     }
 
     test() {
         console.log('testing')
-        batchRequest(this.urls, this.timeout, this.apiKey).then(res => {
+        batchRequest(this.urls, this.timeout, this.apiKey, this.log).then(res => {
             console.log(res)
         }).catch(err => {
             console.log(err);
@@ -77,30 +75,34 @@ class mft {
  * batchRequest
  * Calls req function for each link and sets a timeout
  * @param {string} url
- * @param {number} timeout
+ * @param {number} timeout miliseconds
  * @return {array} of objects
  */
 
-function batchRequest(urls, timeout, apiKey) {
+function batchRequest(urls, timeout, apiKey, log) {
+    
+    if(log) {
+        console.log('Starting...')
+        console.log(urls)
+    }
+    
     
     return new Promise((resolve, reject) => {
-      
-    // OPTIONAL LOG if(this.options.log)
-      // console.log(calculateOperationTime(urls.length, timeout/1000))
 
       let responses = [];
-      let time = timeout
-      for (let i = 0; i < urls.length; i++) {
+
+      for(i = 0; i < urls.length; i++) {
+
+        let index = i
+        let time = timeout * index
 
         setTimeout(() => {
-            console.log(time);
-            
-          req(urls[i], apiKey).then(
+           
+          req(urls[index], apiKey).then(
 
             response => {
-
-              responses.push({url: urls[i], result: response});
-                tries++
+                console.log(response)
+              responses.push({url: urls[index], result: response});
               // resolve only once all requests have been made
               if (urls.length === responses.length) {
                   resolve(responses);
@@ -108,20 +110,21 @@ function batchRequest(urls, timeout, apiKey) {
             },
             
             error => {
-                console.log(error);
+                console.log(error.status);
                 
                if(error.status === 429) {
-                    console.log('Too many requests, retrying...')
-               } else {
-                    responses.push({url: urls[i], result: 'Test failed'});
-               }
+                    console.log('Too many requests, try setting a bigger timeout.')
+               } 
+                   
+               responses.push({url: urls[index], result: 'Test failed', code: error.status});
+               
                
                if (urls.length === responses.length) {
                   resolve(responses);
                }
             }
           );
-        }, (time * (i + 1)));
+        }, time)
       }
     });
   }
