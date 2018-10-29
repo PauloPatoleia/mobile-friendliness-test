@@ -1,5 +1,7 @@
 // 3TH PARTY DEPENDENCIES 
-var axios = require('axios')
+const axios = require('axios')
+
+var scraper = require('google-search-scraper');
 
 
 // Calls the object contructor 'mft' so that there is no need to use the keyword 'new'
@@ -28,11 +30,19 @@ class mft {
         return batchRequest(this.urls, this.timeout, this.apiKey, this.log)
     }
 
-    google(searchTerm) {
+    google(options) {
         console.log('googling...')
+        scraper.search(options, function(err, url) {
+            // This is called for each result
+            if(err) throw err;
+            console.log(url)
+            this.urls.push(url)
+          });
         return this
     }
 }
+
+
 
 
 
@@ -65,7 +75,7 @@ function req(url, apiKey) {
             });
           }
 
-          
+
 
 /**
  * batchRequest

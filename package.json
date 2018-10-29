@@ -25,6 +25,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "cheerio": "~0.13.1",
+    "google-search-scraper": "^0.1.0",
     "request": "~2.33.0"
   }
 }
