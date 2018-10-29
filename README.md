@@ -25,11 +25,11 @@ npm install --save mobile-friendly
 ```
 var mft = require('mobile-friendliness-test')
 
-# Default options will be used if none are provided
+`<!---` Default options will be used if none are provided `--->` 
 var options = {
-    timeout: 15000, # The wait time between requests. We suggest at leat 20s to avoid code 429 error
-    log: true, # console.logs usefull information, good for CLI usage
-    apiKey: Aisfndi9sjfe9jf # You Google Search Console URL Testing tool API KEY - more info [here](https://developers.google.com/webmaster-tools/search-console-api/v1/configure)
+    timeout: 15000, `<!---` The wait time between requests. We suggest at leat 20s to avoid code 429 error `--->` 
+    log: true, `<!---` The wait time between requests. We suggest at leat 20s to avoid code 429 errorconsole.logs usefull information, good for CLI usage `--->`
+    apiKey: Aisfndi9sjfe9jf  `<!---` You Google Search Console URL Testing tool API KEY - more `--->` info [here](https://developers.google.com/webmaster-tools/search-console-api/v1/configure)
 }
 
 links = ["https://www.quora.com", "https://github.com", "https://www.npmjs.com"]
@@ -40,10 +40,12 @@ mft(links, options).test().then((results) => {
   // error
 });
 
-# return an array of objects, example:
-# [ { url: 'https://github.com', result: 'MOBILE_FRIENDLY' },
-#  { url: 'https://www.quora.com', result: 'MOBILE_FRIENDLY' },
-#  { url: 'https://www.npmjs.com', result: 'MOBILE_FRIENDLY']
+<!---
+ return an array of objects, example:
+ [ { url: 'https://github.com', result: 'MOBILE_FRIENDLY' },
+  { url: 'https://www.quora.com', result: 'MOBILE_FRIENDLY' },
+  { url: 'https://www.npmjs.com', result: 'MOBILE_FRIENDLY']
+-->
 
 To use links from a google search:
 
