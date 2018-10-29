@@ -5,7 +5,7 @@ Enables you to run various performance and validation checks against a single or
 ### Installing
 
 ```
-npm install --save mobile-friendly
+npm i mobile-friendliness-test --save
 ```
 
 ### Usage Examples
