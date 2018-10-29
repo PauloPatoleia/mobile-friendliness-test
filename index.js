@@ -16,6 +16,34 @@ function MobileFriendlinessTest(urls, options) {
  * @return {Promise}
  */
 
+class mft {
+    constructor( urls = [], options = {} ) {
+        this.urls = urls
+        this.apiKey = options.apiKey || process.env.API_KEY
+        this.timeout = options.timeout || 15000
+        this.log = options.log || null
+    }
+
+    test() {
+        return batchRequest(this.urls, this.timeout, this.apiKey, this.log)
+    }
+
+    google(searchTerm) {
+        console.log('googling...')
+        return this
+    }
+}
+
+
+
+/**
+ * req
+ * this function takes an api url and uses the fetch api to get the response.
+ * if the request worked, it will return the response in a promise
+ * @param {string} url
+ * @return {Promise}
+ */
+
 function req(url, apiKey) {
 
     return new Promise((resolve, reject) => {
@@ -37,39 +65,7 @@ function req(url, apiKey) {
             });
           }
 
-
-
-
-/**
- * req
- * this function takes an api url and uses the fetch api to get the response.
- * if the request worked, it will return the response in a promise
- * @param {string} url
- * @return {Promise}
- */
-
-class mft {
-    constructor( urls = [], options = {} ) {
-        this.urls = urls
-        this.apiKey = options.apiKey || process.env.API_KEY
-        this.timeout = options.timeout || 15000
-        this.log = options.log || null
-    }
-
-    test() {
-        console.log('testing')
-        batchRequest(this.urls, this.timeout, this.apiKey, this.log).then(res => {
-            console.log(res)
-        }).catch(err => {
-            console.log(err);
-        })
-    }
-
-    google(searchTerm) {
-        console.log('googling...')
-        return this
-    }
-}
+          
 
 /**
  * batchRequest
@@ -101,8 +97,15 @@ function batchRequest(urls, timeout, apiKey, log) {
           req(urls[index], apiKey).then(
 
             response => {
-                console.log(response)
-              responses.push({url: urls[index], result: response});
+                
+                //OPTIONAL LOG
+                if(log) {
+                    console.log(`${urls[index]}: ${response}`)
+                   }
+                
+                // Add to test result to results array
+                responses.push({url: urls[index], result: response});
+
               // resolve only once all requests have been made
               if (urls.length === responses.length) {
                   resolve(responses);
@@ -110,17 +113,30 @@ function batchRequest(urls, timeout, apiKey, log) {
             },
             
             error => {
-                console.log(error.status);
+
+                //OPTIONAL LOG
+                if(log){
+                    console.log(`Error! Status code: ${error.status}`);
+                }
+                
                 
                if(error.status === 429) {
+                   //OPTIONAL LOG
+                   if(log) {
                     console.log('Too many requests, try setting a bigger timeout.')
+                   }
                } 
                    
                responses.push({url: urls[index], result: 'Test failed', code: error.status});
                
                
                if (urls.length === responses.length) {
-                  resolve(responses);
+                    //OPTIONAL LOG
+                    if(log) {
+                        console.log(responses)
+                    }
+
+                    resolve(responses);
                }
             }
           );
