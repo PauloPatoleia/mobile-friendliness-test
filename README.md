@@ -74,10 +74,6 @@ mft([], options).google(searchOptions).test().then((results) => {
 * [google-search-scraper](https://www.npmjs.com/package/google-search-scraper) - Used for Google search result urls fetching
 
 
-## Contributing
-
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us. 
-
 ## Authors
 
 * **Valentino Patoleia** - *Initial work* - [FixTheInternet](https://github.com/FixTheInternet)
