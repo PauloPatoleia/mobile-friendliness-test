@@ -2,6 +2,8 @@
 
 Enables you to run various performance and validation checks against a single or multiple web pages to check if they are mobile friendly
 
+This is an early version that still needs some fixes, contact me if you wish to contribute!
+
 ### Installing
 
 ```
@@ -39,7 +41,7 @@ searchOptions = {
     query: 'cars',
     host: 'www.google.com',
     lang: 'en',
-    age: 'd1', // last 24 hours ([hdwmy]\d? as in google URL)
+    age: 'd1', // (opcional) last 24 hours ([hdwmy]\d? as in google URL)
     limit: 10,
     params: {} // params will be copied as-is in the search URL query string
 }
@@ -47,7 +49,9 @@ searchOptions = {
 mft([], options).google(searchOptions).test()
 
 ```
+## Contributing
 
+All constributions are welcome, please contact me via email or open an issue before making a change. 
 
 
 ## Built With
